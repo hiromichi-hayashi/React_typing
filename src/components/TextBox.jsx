@@ -8,30 +8,25 @@ import AlertDialog from "./AlertDialog";
 import Timer from './Timer';
 import Explantion from './Explanation';
 import Title from './Title';
+import dictionary from '../dictionary';
 
 
 
 const useStyles = makeStyles({
-    greenFont: {
+    Font: {
         height: "100%",
+        fontFamily: "Times New Roman",
+        fontSize: "130px",
+        display: "inline-block"
+    },
+    green: {
         color: "#689f38",
-        fontFamily: "Times New Roman",
-        fontSize: "130px",
-        display: "inline-block"
     },
-    redFont: {
-        height: "100%",
-        color: "red",
-        fontFamily: "Times New Roman",
-        fontSize: "130px",
-        display: "inline-block"
+    red: {
+        color: 'red',
     },
-    greyFont: {
-        height: "100%",
-        color: "grey",
-        fontFamily: "Times New Roman",
-        fontSize: "130px",
-        display: "inline-block"
+    gray: {
+        color: 'gray',
     },
     text: {
         margin: "8px auto",
@@ -51,7 +46,6 @@ const useStyles = makeStyles({
 
 const TextBox = () => {
     const classes = useStyles();
-    const { dictionary } = require("../dictionary");
     const [countAnswer, setCountAnswer] = useState(0)//回答数
     const [question, setQuestion] = useState("");//問題文
     const [explantion, setExplantion] = useState("");//説明文
@@ -79,8 +73,8 @@ const TextBox = () => {
                 if (timeOfTyping !== 0) {
                     setTimeOfTyping(c => c - 10);
                 }
-
             }, 10);
+
             if (timeOfTyping === 0) {
                 setModalOpen(true)
                 setNextQuestion(false)
@@ -88,7 +82,7 @@ const TextBox = () => {
             }
             return () => clearInterval(interval)
         }
-    });
+    }, [started, timeOfTyping]);
 
 
 
@@ -106,15 +100,14 @@ const TextBox = () => {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    //問題の呼び出し
+    // 問題の呼び出し
     useEffect(() => {
-        if (!nextQuestion) {
-            QuestionText()
-        }
+
+        QuestionText()
 
         return setNextQuestion(false);
 
-    }, [nextQuestion]);
+    }, [nextQuestion, QuestionText]);
 
 
     //keyイベントを取得して入力された文字を判定する
@@ -171,18 +164,18 @@ const TextBox = () => {
         >
             <Title />
             <Explantion />
-            <Typography className={classes.greenFont}>
+            <Typography className={`${classes.Font} ${classes.green}`}>
                 {question.slice(0, corectType)}
-                {isMisstype ? (
-                    <Typography className={classes.redFont} >
-                        {question.slice(corectType)}
-                    </Typography>
-                ) : (
-                    <Typography className={classes.greyFont} >
-                        {question.slice(corectType, question.length)}
-                    </Typography>
-                )}
             </Typography>
+            {isMisstype ? (
+                <Typography className={`${classes.Font} ${classes.red}`} >
+                    {question.slice(corectType)}
+                </Typography>
+            ) : (
+                <Typography className={`${classes.Font} ${classes.gray}`} >
+                    {question.slice(corectType, question.length)}
+                </Typography>
+            )}
 
 
             <Box
