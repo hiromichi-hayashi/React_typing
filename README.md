@@ -8,8 +8,6 @@
 
 [React_typing URL](https://chatbot-demo-d5a78.web.app/).
 
-![img](src/img/typing.png)
-
 ## 使用機能
 
 React/Material-UI/react-share
