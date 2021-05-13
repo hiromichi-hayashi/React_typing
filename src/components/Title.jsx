@@ -8,9 +8,9 @@ const useStyles = makeStyles({
         height: '10px',
         margin: '7px',
         width: '60%',
-        fontSize: '40px',
+        fontSize: '50px',
         fontFamily: "Times New Roman",
-
+        fontWeight: 'bold',
     }
 })
 

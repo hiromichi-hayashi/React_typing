@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from "@material-ui/core/Typography";
 import Box from '@material-ui/core/Box';
 
+import Text from "./Text";
 import AlertDialog from "./AlertDialog";
 import Timer from './Timer';
 import Explantion from './Explanation';
@@ -11,24 +12,8 @@ import Title from './Title';
 import dictionary from '../dictionary';
 
 
-
 const useStyles = makeStyles({
-    Font: {
-        height: "100%",
-        fontFamily: "Times New Roman",
-        fontSize: "130px",
-        display: "inline-block"
-    },
-    green: {
-        color: "#689f38",
-    },
-    red: {
-        color: 'red',
-    },
-    gray: {
-        color: 'gray',
-    },
-    text: {
+    textFont: {
         margin: "8px auto",
         fontSize: "18px",
         fontFamily: "Times New Roman",
@@ -58,12 +43,17 @@ const TextBox = () => {
     const [started, setStarted] = useState(false);//trueで開始
     const [modalOpen, setModalOpen] = useState(false);//モーダルを開く
     const [timeOfTyping, setTimeOfTyping] = useState(60000);
-
+    const ref = useRef(null);
 
     const defaultProps = {
         m: 5,
         style: { width: '50%', height: '100px' },
     };
+
+    //BOXにフォーカスする
+    useEffect(() => {
+        ref.current.focus()
+    }, [])
 
 
     //タイマー機能
@@ -118,14 +108,12 @@ const TextBox = () => {
             setIsMisstype(false);
             setCorectType(corectType + 1);
             setTypeCount(typeCount + 1)
-            console.log(started)
 
             if (corectType + 1 === question.length) {
                 //corectTypeの初期化
                 setCorectType(0);
                 setNextQuestion(true);
                 setCountAnswer(countAnswer + 1);
-                console.log(countAnswer)
             }
         } else {
             setIsMisstype(true);
@@ -153,30 +141,21 @@ const TextBox = () => {
         setTimeOfTyping(60000);
     };
 
-
-    // document.addEventListener('keydown', handleKeyDown)
-
     return (
         <Box
+            ref={ref}
             bgcolor="#fff"
             onKeyDown={(e) => { handleKeyDown(e) }}
             tabIndex={0}
         >
             <Title />
             <Explantion />
-            <Typography className={`${classes.Font} ${classes.green}`}>
-                {question.slice(0, corectType)}
-            </Typography>
+            <Text color='green' text={question.slice(0, corectType)} />
             {isMisstype ? (
-                <Typography className={`${classes.Font} ${classes.red}`} >
-                    {question.slice(corectType)}
-                </Typography>
+                <Text color={"red"} text={question.slice(corectType)} />
             ) : (
-                <Typography className={`${classes.Font} ${classes.gray}`} >
-                    {question.slice(corectType, question.length)}
-                </Typography>
+                <Text color="gray" text={question.slice(corectType, question.length)} />
             )}
-
 
             <Box
                 display="flex"
@@ -184,13 +163,13 @@ const TextBox = () => {
                 color="white"
                 bgcolor="palevioletred" >
                 <Box  {...defaultProps}>
-                    <Typography className={classes.text}>
+                    <Typography className={classes.textFont}>
                         {explantion.meaning1}
                     </Typography>
-                    <Typography className={classes.text}>
+                    <Typography className={classes.textFont}>
                         {explantion.meaning2}
                     </Typography>
-                    <Typography className={classes.text}>
+                    <Typography className={classes.textFont}>
                         {explantion.meaning3}
                     </Typography>
                 </Box>
@@ -204,7 +183,6 @@ const TextBox = () => {
             />
             <Timer timeOfTyping={timeOfTyping} />
         </Box>
-
     );
 };
 
